@@ -46,9 +46,13 @@ function activate(context) {
 		}
 		// 前一函数缩进空格数量
 		var tpp = func_signature.split('def')[0].length + 4
+		// todo: 生成一个指定格式返回格式的字符串
 		
-		console.log(selection.active)
-		var annotation = `${' '.repeat(tpp)}"""
+
+		var rt = ParsingSignature(func_signature)
+		
+		var annotation = `
+${' '.repeat(tpp)}"""
 ${' '.repeat(tpp)}explanation:
 ${' '.repeat(tpp+4)}--> function_meaning 
 			
@@ -67,12 +71,13 @@ ${' '.repeat(tpp+4)}--->
 ${' '.repeat(tpp)}output:
 ${' '.repeat(tpp+4)}--->
 ${' '.repeat(tpp)}"""
-			`
-		
+`		
+	
 		editor.edit(function (editBuilder){
-
-			editBuilder.insert(selection.active, annotation);
+			// selection.active.character = 0
+			editBuilder.insert( selection.active, annotation);
 		})
+	
 		vscode.window.showInformationMessage('Generate code successful!');
 	});
 

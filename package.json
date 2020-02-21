@@ -1,7 +1,8 @@
 {
 	"name": "qahelper",
 	"displayName": "QAHelper",
-	"description": "Helper of QAManual and generate annotation in Python project",
+	"author": {"email": "somewheve@gmail.com", "name": "somewheve", "url": "https://github.com/somewheve"},
+	"description": "Helper of QAManual and generate annotation in Python Function",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.41.0"
@@ -18,7 +19,7 @@
 		"commands": [
 			{
 				"command": "extension.GenerateAnnotation",
-				"title": "QAnnotation"
+				"title": "QAFastGenerate"
 			}
 		],
 		"menus": {
