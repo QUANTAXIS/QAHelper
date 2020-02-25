@@ -21,6 +21,8 @@ function GenarateParamDoc(dict,tpp){
 	console.log(dict)
 	
 	for(var dt in dict){
+		if (dict[dt].name=='self')
+			continue
 		var t = `
 ${' '.repeat(tpp+4)}* ${dict[dt].name} ->:
 ${' '.repeat(tpp+8)}meaning:
