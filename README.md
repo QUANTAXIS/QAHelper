@@ -1,11 +1,15 @@
 # qahelper README
 
-A Fast Annotation Generate tool, worked with QAManual()
+A Fast Annotation Generate Tool, worked with [QAManual](https://github.com/QUANTAXIS/QAManual)
 
 
 ## Install --> waiting for upload
 just open vsode, and search qahelper in extension store. then install it.
 easy to follow.
+
+## Notice
+annotation with self-define class is not supported
+we just support datetime module and typing module
 
 ## Usage
 
@@ -13,21 +17,36 @@ easy to follow.
 - ctrl + alt + i
 - open command and type QAFastGenerate , then enter
 
+## Example
+```
+def letsgo(name:str, age:int)->int:
 
-## Extension Settings
+    """
+    explanation:
+        Function meaning		
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+    params:
+        * name ->:
+            meaning:
+            type: str
+            optional: [Undeclared]
+        * age ->:
+            meaning:
+            type: int
+            optional: [Undeclared]
 
-For example:
+    return:
+        int
+	
+    demonstrate:
+        Not described
+	
+    output:
+        Not described
+    """
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## todo
-
-- to parse the parmas and it's type, auto generate params option
+    
+```
 
 
 **Enjoy!**
