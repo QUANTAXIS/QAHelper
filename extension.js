@@ -12,13 +12,11 @@ const vscode = require('vscode');
 function GenarateParamDoc(dict,tpp){
 	// 生成doc文本
 	if (dict.length!=0){
-		result = `\n${' '.repeat(tpp)}params:`
+		var result = `\n${' '.repeat(tpp)}params:`
 	}
 	else{
-		result = ""
+		var result = ""
 	}
-	console.log("执行生成参数")
-	console.log(dict)
 	
 	for(var dt in dict){
 		if (dict[dt].name=='self')
@@ -31,21 +29,25 @@ ${' '.repeat(tpp+8)}optional: [${dict[dt].default}]`
 
 result = result + t
 	}
-	console.log(result)
-	return result
+	if (dict.length!=0){
+		return result + "\n"
+	}
+	else{
+		return result
+	}
+
  }
 
 
 function get_params(command_string,tpp){
-	rt = "None"
+	var rt = "None"
 	// 如果存在->那么取出值并覆盖
 	if(command_string.search("->") != -1){
 		rt = /->(.*):/.exec(command_string)[1]
 	}
 	command_string = command_string.replace(/(^\s*)/g, "");
-	console.log(command_string)
 	var func_name = /^def ([_\da-zA-Z]+)\(.*/.exec(command_string)[1]
-	console.log(func_name)
+
 	var comon = `python -c "
 import inspect
 import json
@@ -97,13 +99,11 @@ function activate(context) {
 		// 前一函数缩进空格数量
 		var tpp = func_signature.split('def')[0].length + 4
 		// todo: 生成一个指定格式返回格式的字符串
-		rt = get_params(func_signature, tpp)
-		console.log(rt)
-		
+		var rt = get_params(func_signature, tpp)		
 		var annotation = `
 ${' '.repeat(tpp)}"""
 ${' '.repeat(tpp)}explanation:
-${' '.repeat(tpp+4)}--> function_meaning		
+${' '.repeat(tpp+4)}Function meaning		
 ${rt.params}
 ${' '.repeat(tpp)}return:
 ${' '.repeat(tpp+4)}${rt.rt}
