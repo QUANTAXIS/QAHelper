@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+<script>
+    function GenarateParamDoc(text, tpp) {
+        // 生成doc文本
+        console.log(text)
+        var t = `
+${' '.repeat(tpp + 4)}* name ->:
+${' '.repeat(tpp + 8)}meaning:
+${' '.repeat(tpp + 8)}type:
+${' '.repeat(tpp + 8)}optional:
+`
+    }
+
+    function ParsingSignature(text, tpp) {
+
+        var params = `
+${' '.repeat(tpp)}params:
+`
+        // 先拿到参数元组列表
+        var param_string = /\((.*)\)/.exec(text)[1]
+        console.log(param_string)
+    
+        var regex = /([0-9a-zA-Z_]+[:{0,1}?])/g
+        if (param_string != "") {
+            var param_list = []
+            var temp_list = param_string.match(regex);
+            console.log(temp_list)
+            var fg = 0;
+        }
+        else {
+            params = ""
+        }
+
+        // 拿到返回值 
+        var return_type = /->(.*):$/.exec(text);
+        var c = null;
+        if (return_type == null)
+            c = "ReturnType"
+        else
+            c = return_type[1]
+        return {
+            "rt": c,
+            "params": params
+        }
+    }
+    // ParsingSignature("(siganal:int=1, hello:[List, int]=1)", 4)
+    // console.log("22222")
+    // ParsingSignature("(siganal, hello:[List, int]=1)", 4)
+
+</script>
