@@ -11,6 +11,8 @@ easy to follow.
 annotation with self-define class is not supported
 we just support datetime module and typing module
 
+we recommand you to format your code after you finish your function 
+
 ## Usage
 
 - right click -> QAFastGenerate
