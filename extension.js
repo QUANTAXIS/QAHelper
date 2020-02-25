@@ -62,9 +62,9 @@ ${command_string}
     pass
 for x in inspect.signature(${func_name}).parameters.values():
 	try:
-		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Not described', default= x.default if x.default != inspect._empty else 'Not described')) 
+		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared')) 
 	except Exception:
-		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Not described', default= x.default if x.default != inspect._empty else 'Not described'))
+		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared'))
 print(json.dumps(result))
 "`
 	console.log(comon)
