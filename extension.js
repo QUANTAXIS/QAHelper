@@ -44,23 +44,31 @@ function get_params(command_string,tpp){
 	// 如果存在->那么取出值并覆盖
 	if(command_string.search("->") != -1){
 		rt = /->(.*):/.exec(command_string)[1]
+		var rep = /\)(\s{0,1}->\s{0,1}.*):/.exec(command_string)[1];
+		command_string = command_string.replace(rep, "");
 	}
 	command_string = command_string.replace(/(^\s*)/g, "");
+	
+	
 	var func_name = /^def ([_\da-zA-Z]+)\(.*/.exec(command_string)[1]
 
 	var comon = `python -c "
 import inspect
 import json
+from typing import *
+from datetime import *
 result = []
 ${command_string}
     pass
-for x in inspect.signature(${func_name}).parameters.values(): 
-	result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Not described', default= x.default if x.default != inspect._empty else 'Not described')) 
+for x in inspect.signature(${func_name}).parameters.values():
+	try:
+		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Not described', default= x.default if x.default != inspect._empty else 'Not described')) 
+	except Exception:
+		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Not described', default= x.default if x.default != inspect._empty else 'Not described'))
 print(json.dumps(result))
 "`
 	console.log(comon)
 	var message = execute(comon).toString();
-	console.log(JSON.parse(message))
 	return {
 		"params":GenarateParamDoc(JSON.parse(message), tpp),
 		"rt": rt
