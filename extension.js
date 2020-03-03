@@ -1,5 +1,4 @@
 const execute = require("child_process").execSync
-
 // The modchild_processule 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
@@ -38,21 +37,16 @@ result = result + t
 
  }
 
+ function get_command(version, command_string, func_name){
+	//根据版本信息来提高
+	var str = ''
+	if (version == "win32"){
+		// windows系统
+		str = `"import inspect\`nimport json\`nfrom typing import *\`nfrom datetime import *\`nresult = []\`n${command_string}\`n    pass\`nfor x in inspect.signature(${func_name}).parameters.values():\`n    try:\`n        result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared')) \`n    except Exception:\`n        result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared'))\`nprint(json.dumps(result))"` 
 
-function get_params(command_string,tpp){
-	var rt = "None"
-	// 如果存在->那么取出值并覆盖
-	if(command_string.search("->") != -1){
-		rt = /->(.*):/.exec(command_string)[1]
-		var rep = /\)(\s{0,1}->\s{0,1}.*):/.exec(command_string)[1];
-		command_string = command_string.replace(rep, "");
 	}
-	command_string = command_string.replace(/(^\s*)/g, "");
-	
-	
-	var func_name = /^def ([_\da-zA-Z]+)\(.*/.exec(command_string)[1]
-
-	var comon = `python -c "
+	if (version == "linux"){
+		str = `"
 import inspect
 import json
 from typing import *
@@ -66,9 +60,29 @@ for x in inspect.signature(${func_name}).parameters.values():
 	except Exception:
 		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared'))
 print(json.dumps(result))
-"`
-	console.log(comon)
-	var message = execute(comon).toString();
+"` 
+	}
+	return str
+ }
+
+function get_params(command_string,tpp){
+	var rt = "None"
+	// 如果存在->那么取出值并覆盖
+	if(command_string.search("->") != -1){
+		rt = /->(.*):/.exec(command_string)[1]
+		var rep = /\)(\s{0,1}->\s{0,1}.*):/.exec(command_string)[1];
+		command_string = command_string.replace(rep, "");
+	}
+	command_string = command_string.replace(/(^\s*)/g, "");
+	
+	var func_name = /^def ([_\da-zA-Z]+)\(.*/.exec(command_string)[1]
+	header = "python -c "
+	var version =  process.platform;
+	var body = get_command(version, command_string, func_name);
+	console.log
+	command = "powershell -Command '" +  header +body + "'";
+	console.log(command)
+	var message = execute(command).toString();
 	return {
 		"params":GenarateParamDoc(JSON.parse(message), tpp),
 		"rt": rt
