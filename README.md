@@ -4,8 +4,11 @@ A Fast Annotation Generate tool, worked with QAManual()
 
 
 ## Install --> waiting for upload
-just open vsode, and search qahelper in extension store. then install it.
-easy to follow.
+just open vsode, and search `qahelper` in extension store. then click `install` and `reload` it.
+
+It's easy to follow.
+
+Before that, you should install `Python` Extensions and `Python Interpreter` first.
 
 ## Usage
 
@@ -25,9 +28,9 @@ This extension contributes the following settings:
 * `myExtension.enable`: enable/disable this extension
 * `myExtension.thing`: set to `blah` to do something
 
-## todo
-
-- to parse the parmas and it's type, auto generate params option
+## Support Platform 
+- windows 
+- linux 
 
 
 **Enjoy!**
