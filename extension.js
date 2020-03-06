@@ -1,5 +1,4 @@
 const execute = require("child_process").execSync
-
 // The modchild_processule 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
@@ -38,6 +37,33 @@ result = result + t
 
  }
 
+ function get_command(command_string, func_name){
+	//根据版本信息来提高
+	var version =  process.platform;
+	var str = ''
+	if (version == "win32"){
+		// windows系统
+		str =  "powershell -Command \"" + `$s=(\'import inspect;import json;from typing import *;from datetime import *;result = [];${command_string};    pass;for x in inspect.signature(${func_name}).parameters.values():;    try:;        result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None)) ;    except Exception:;        result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None));print(json.dumps(result))\' -split \\";\\") -join \\"\`r\`n\\";python -c $s` +  "\"";
+	}
+	if (version == "linux"){
+		str =  "python -c " + `"
+import inspect
+import json
+from typing import *
+from datetime import *
+result = []
+${command_string}
+    pass
+for x in inspect.signature(${func_name}).parameters.values():
+	try:
+		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None)) 
+	except Exception:
+		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None))
+print(json.dumps(result))
+"` 
+	}
+	return str
+ }
 
 function get_params(command_string,tpp){
 	var rt = "None"
@@ -49,26 +75,9 @@ function get_params(command_string,tpp){
 	}
 	command_string = command_string.replace(/(^\s*)/g, "");
 	
-	
 	var func_name = /^def ([_\da-zA-Z]+)\(.*/.exec(command_string)[1]
-
-	var comon = `python -c "
-import inspect
-import json
-from typing import *
-from datetime import *
-result = []
-${command_string}
-    pass
-for x in inspect.signature(${func_name}).parameters.values():
-	try:
-		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared')) 
-	except Exception:
-		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared'))
-print(json.dumps(result))
-"`
-	console.log(comon)
-	var message = execute(comon).toString();
+	var cmd = get_command(command_string, func_name);
+	var message = execute(cmd).toString();
 	return {
 		"params":GenarateParamDoc(JSON.parse(message), tpp),
 		"rt": rt
@@ -78,14 +87,7 @@ print(json.dumps(result))
 
 
 function activate(context) {
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
 	let disposable = vscode.commands.registerTextEditorCommand('extension.GenerateAnnotation', function () {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
 		let editor = vscode.window.activeTextEditor;
 		if (!editor) {
 			return;
