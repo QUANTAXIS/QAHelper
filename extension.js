@@ -88,6 +88,7 @@ function get_params(command_string,tpp){
 
 function activate(context) {
 	let disposable = vscode.commands.registerTextEditorCommand('extension.GenerateAnnotation', function () {
+
 		let editor = vscode.window.activeTextEditor;
 		if (!editor) {
 			return;
