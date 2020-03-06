@@ -37,16 +37,17 @@ result = result + t
 
  }
 
- function get_command(version, command_string, func_name){
+ function get_command(command_string, func_name){
 	//根据版本信息来提高
+	var version =  process.platform;
 	var str = ''
 	if (version == "win32"){
 		// windows系统
-		str = `"import inspect\`nimport json\`nfrom typing import *\`nfrom datetime import *\`nresult = []\`n${command_string}\`n    pass\`nfor x in inspect.signature(${func_name}).parameters.values():\`n    try:\`n        result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared')) \`n    except Exception:\`n        result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared'))\`nprint(json.dumps(result))"` 
+		str = `$s=(\'import inspect;import json;from typing import *;from datetime import *;result = [];${command_string};    pass;for x in inspect.signature(${func_name}).parameters.values():;    try:;        result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None)) ;    except Exception:;        result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None));print(json.dumps(result))\' -split \\";\\") -join \\"\`r\`n\\";python -c $s` 
 
 	}
 	if (version == "linux"){
-		str = `"
+		str =  "python -c " + `"
 import inspect
 import json
 from typing import *
@@ -56,9 +57,9 @@ ${command_string}
     pass
 for x in inspect.signature(${func_name}).parameters.values():
 	try:
-		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared')) 
+		result.append(dict(name=x.name, annotation=x.annotation.__name__ if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None)) 
 	except Exception:
-		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else 'Undeclared', default= x.default if x.default != inspect._empty else 'Undeclared'))
+		result.append(dict(name=x.name, annotation=x.annotation._name if x.annotation != inspect._empty else None, default= x.default if x.default != inspect._empty else None))
 print(json.dumps(result))
 "` 
 	}
@@ -76,11 +77,9 @@ function get_params(command_string,tpp){
 	command_string = command_string.replace(/(^\s*)/g, "");
 	
 	var func_name = /^def ([_\da-zA-Z]+)\(.*/.exec(command_string)[1]
-	header = "python -c "
-	var version =  process.platform;
-	var body = get_command(version, command_string, func_name);
+	var body = get_command(command_string, func_name);
 	console.log
-	command = "powershell -Command '" +  header +body + "'";
+	command = "powershell -Command \""  +body + "\"";
 	console.log(command)
 	var message = execute(command).toString();
 	return {
