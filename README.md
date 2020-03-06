@@ -22,23 +22,12 @@ we recommand you to format your code after you finish your function
 - ctrl + alt + i
 - open command and type QAFastGenerate , then enter
 
-<<<<<<< HEAD
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
 ## Support Platform 
 - windows 
 - linux 
-=======
+
+
 ## Example
 ```
 def letsgo(name:str, age:int)->int:
@@ -66,10 +55,6 @@ def letsgo(name:str, age:int)->int:
     output:
         Not described
     """
-
-    
 ```
->>>>>>> 8e91762944f083023c32b0e661e060d33e3a1471
-
 
 **Enjoy!**
