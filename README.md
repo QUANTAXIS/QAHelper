@@ -3,7 +3,7 @@
 A Fast Annotation Generate Tool, worked with [QAManual](https://github.com/QUANTAXIS/QAManual)
 
 
-## Install --> waiting for upload
+## Install 
 just open vsode, and search `qahelper` in extension store. then click `install` and `reload` it.
 
 It's easy to follow.
